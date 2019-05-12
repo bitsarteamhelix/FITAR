@@ -1,0 +1,32 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class WeatherPanelOpener : MonoBehaviour
+{
+    public GameObject Panel;
+    public bool PanelOn = false;
+
+    public void OpenPanel()
+    {
+
+        if(Panel != null )
+        {
+            if (!PanelOn)
+            {
+                Panel.SetActive(true);
+                PanelOn = true; 
+            }
+
+            else 
+            {
+                Panel.SetActive(false);
+                PanelOn = false;
+            }
+           
+        }
+
+    }
+
+    
+}
