@@ -1,0 +1,108 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[System.Serializable]
+public struct APIResponse
+{
+    // public string base; // causes error
+    public string name;
+    public int id;
+    public int cod;
+    public Coord coord;
+    public Weather[] weather;
+}
+
+[System.Serializable]
+public struct Coord{
+	public int lon;
+	public int lat;
+}
+
+[System.Serializable]
+public struct Weather{
+	public int id;
+	public string main;
+	public string description;
+	public string icon;
+}
+
+
+public class WeatherUpdate : MonoBehaviour {
+  public string url = "http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&APPID=82469328b6c5b92cca5e772d71966357";
+    
+	// Use this for initialization
+
+        public void Menu_Click()
+    {
+        IEnumerator Start()
+        {
+            WWW request = new WWW(url);
+            yield return request;
+
+            APIResponse response = JsonUtility.FromJson<APIResponse>(request.text);
+
+            if (request.error == null || request.error == "")
+            {
+                Debug.Log("Response:");
+                Debug.Log(request.text);
+                Debug.Log(response.name);
+                Debug.Log(response.coord);
+                Debug.Log(response.coord.lat);
+                Debug.Log(response.weather[0].id);
+            }
+            else
+            {
+                Debug.Log("Error: " + request.error);
+            }
+        }
+
+    }
+   
+}
+
+
+
+// sample response
+/*{
+   "coord":{
+      "lon":139,
+      "lat":35
+   },
+   "weather":[
+      {
+         "id":800,
+         "main":"Clear",
+         "description":"clear sky",
+         "icon":"01n"
+      }
+   ],
+   "base":"stations",
+   "main":{
+      "temp":292.95,
+      "pressure":1012,
+      "humidity":84,
+      "temp_min":292.04,
+      "temp_max":293.71
+   },
+   "wind":{
+      "speed":1.79,
+      "deg":90,
+      "gust":4.02
+   },
+   "clouds":{
+      "all":0
+   },
+   "dt":1557573686,
+   "sys":{
+      "type":3,
+      "id":2010218,
+      "message":0.0063,
+      "country":"JP",
+      "sunrise":1557517462,
+      "sunset":1557567389
+   },
+   "id":1851632,
+   "name":"Shuzenji",
+   "cod":200
+}*/
