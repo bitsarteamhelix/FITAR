@@ -35,7 +35,10 @@ public class WeatherUpdate : MonoBehaviour {
 
         public void Menu_Click()
     {
-        IEnumerator Start()
+            Update();   
+    
+    }
+        IEnumerator Update()
         {
             WWW request = new WWW(url);
             yield return request;
@@ -57,7 +60,7 @@ public class WeatherUpdate : MonoBehaviour {
             }
         }
 
-    }
+    
    
 }
 
