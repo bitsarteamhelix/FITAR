@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public struct APIResponse
@@ -14,54 +15,68 @@ public struct APIResponse
 }
 
 [System.Serializable]
-public struct Coord{
-	public int lon;
-	public int lat;
+public struct Coord
+{
+    public int lon;
+    public int lat;
 }
 
 [System.Serializable]
-public struct Weather{
-	public int id;
-	public string main;
-	public string description;
-	public string icon;
+public struct Weather
+{
+    public int id;
+    public string main;
+    public string description;
+    public string icon;
 }
 
 
-public class WeatherUpdate : MonoBehaviour {
-  public string url = "http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&APPID=82469328b6c5b92cca5e772d71966357";
-    
-	// Use this for initialization
+public class WeatherUpdate : MonoBehaviour
+{
+    public string url = "http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&APPID=82469328b6c5b92cca5e772d71966357";
 
-        public void Menu_Click()
+    // Use this for initialization
+
+    public void Menu_Click()
     {
-            getWeather();   
-    
+
+        Debug.Log("button clicked1");
+        StartCoroutine("getWeather");
+        Debug.Log("button clicked2");
+
     }
-        IEnumerator getWeather()
+
+    IEnumerator getWeather()
+    {
+        Debug.Log("getting weather1");
+
+        WWW request = new WWW(url);
+        yield return request;
+
+        APIResponse response = JsonUtility.FromJson<APIResponse>(request.text);
+
+        if (request.error == null || request.error == "")
         {
-            WWW request = new WWW(url);
-            yield return request;
+            // Make a Text UI element, and name it 'weatherText'
+            GameObject textObject = GameObject.Find("weatherText");
+            Text text = textObject.GetComponent<Text>();
+            text.text = response.name;
 
-            APIResponse response = JsonUtility.FromJson<APIResponse>(request.text);
-
-            if (request.error == null || request.error == "")
-            {
-                Debug.Log("Response:");
-                Debug.Log(request.text);
-                Debug.Log(response.name);
-                Debug.Log(response.coord);
-                Debug.Log(response.coord.lat);
-                Debug.Log(response.weather[0].id);
-            }
-            else
-            {
-                Debug.Log("Error: " + request.error);
-            }
+            Debug.Log("Response:");
+            Debug.Log(request.text);
+            Debug.Log(response.name);
+            Debug.Log(response.coord);
+            Debug.Log(response.coord.lat);
+            Debug.Log(response.weather[0].id);
+        }
+        else
+        {
+            Debug.Log("Error: " + request.error);
         }
 
-    
-   
+
+    }
+
 }
 
 
@@ -108,4 +123,3 @@ public class WeatherUpdate : MonoBehaviour {
    "id":1851632,
    "name":"Shuzenji",
    "cod":200
-}*/
